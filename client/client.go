@@ -16,9 +16,7 @@ func NewClient(endpoint string, logger *logger.Logger) *graphql.Client {
 
 	client := graphql.NewClient(endpoint)
 
-	client.Log = func(s string) {
-		logger.Debug(fmt.Sprintf("[machinebox/graphql] %s", s))
-	}
+	client.Log = newFilteringLogger(logger)
 
 	return client
 }
@@ -41,4 +39,16 @@ func Run(client *graphql.Client, token, query string) (map[string]interface{}, e
 	var resp map[string]interface{}
 	err := client.Run(ctx, req, &resp)
 	return resp, err
+}
+
+type debugLoggerInterface interface {
+	Debug(string, ...interface{})
+}
+
+func newFilteringLogger(logger debugLoggerInterface) func(string) {
+
+	// hard-code a filter here
+	return func(s string) {
+		logger.Debug(fmt.Sprintf("[machinebox/graphql] %s", s))
+	}
 }
