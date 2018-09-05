@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/CircleCI-Public/circleci-cli/logger"
 	"github.com/CircleCI-Public/circleci-cli/version"
@@ -46,9 +47,9 @@ type debugLoggerInterface interface {
 }
 
 func newFilteringLogger(logger debugLoggerInterface) func(string) {
-
-	// hard-code a filter here
 	return func(s string) {
-		logger.Debug(fmt.Sprintf("[machinebox/graphql] %s", s))
+		authorizationRegexp := regexp.MustCompile(`(Authorization:\[)([[:alnum:]]+)(\])`)
+		cleanedString := authorizationRegexp.ReplaceAllString(s, "$1 TOKEN HIDDEN $3")
+		logger.Debug(fmt.Sprintf("[machinebox/graphql] %s", cleanedString))
 	}
 }

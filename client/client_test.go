@@ -21,8 +21,8 @@ var _ = Describe("clientFilteringLogger", func() {
 
 		println("hello")
 		logger := newFilteringLogger(fakeLog)
-		logger("Data1FilterMeData2")
-		Expect(fakeLog.output).To(Equal([]string{"[machinebox/graphql] Data1Data2"}))
+		logger("Data1Authorization:[123456]Data2")
+		Expect(fakeLog.output).To(Equal([]string{"[machinebox/graphql] Data1Authorization:[ TOKEN HIDDEN ]Data2"}))
 	})
 
 })
