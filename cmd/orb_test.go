@@ -66,13 +66,8 @@ var _ = Describe("Orb integration tests", func() {
 			It("works", func() {
 				By("setting up a mock server")
 
-				gqlResponse := `{
-							"orbConfig": {
-								"sourceYaml": "{}",
-								"valid": true,
-								"errors": []
-							}
-						}`
+				tmpBytes := golden.Get(GinkgoT(), filepath.FromSlash("orb/validate/ok_response.json"))
+				gqlResponse := string(tmpBytes)
 
 				response := struct {
 					Query     string `json:"query"`
